@@ -10,7 +10,7 @@ dependencies:
   - ipywidgets
   - requests
   - folium
-  - jupyterlite-simple-cors-proxy
   - pip:
     - ipython-magic-folium
+    - jupyterlite-simple-cors-proxy
 
