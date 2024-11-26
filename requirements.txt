@@ -62,3 +62,6 @@ bqplot
 
 # CORS proxy
 jupyterlite-simple-cors-proxy
+
+## Open from URL - allows us to open notebooks inside the package
+jupyterlab-open-url-parameter
