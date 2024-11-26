@@ -32,16 +32,17 @@ jobs:
 
       - name: Patch JupyterLite for Moodle use
         run: |
-          sed -i 's|<link rel="manifest" href="\([^"]*\)" />|<link rel="manifest" href="\1" crossorigin="use-credentials" />|' ./_output/lab/index.html
+          sed -i 's|<link rel="manifest" href="\([^"]*\)" />|<link rel="manifest" href="\1" crossorigin="use-credentials" />|' ./dist/lab/index.html
 
       - name: Patch config-utils.js
-        run: cp ./patches/config-utils.js ./_output/config-utils.js
+        run: cp ./patches/config-utils.js ./dist/config-utils.js
+  
       # For Moodle, the html5.zip needs to see the index.html at the root
       # So create a zip file with no wrapper directory
       # that will unarchive the files at the current path.
       - name: Create the a JupyterLite.zip file
         run: |
-          cd _output
+          cd dist
           zip -r ../jupyterlite-web-dist.zip . --exclude "*.git*"
 
       - name: Upload JupyterLite site artifact
