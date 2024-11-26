@@ -43,10 +43,10 @@ jobs:
       - name: Create the a JupyterLite.zip file
         run: |
           cd dist
-          zip -r ../jupyterlite-web-dist.zip . --exclude "*.git*"
+          zip -r ../tm112-jupyterlite-html5zip.zip . --exclude "*.git*"
 
       - name: Upload JupyterLite site artifact
         uses: actions/upload-artifact@v3
         with:
-          name: jupyterlite-web-distribution
-          path: jupyterlite-web-dist.zip
+          name: tm112-jupyterlite-html5zip-distribution
+          path: tm112-jupyterlite-html5zip.zip
