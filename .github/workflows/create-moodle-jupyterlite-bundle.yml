@@ -1,12 +1,6 @@
-name: Build and Deploy
+name: Create HTML5 bundle
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - '*'
   workflow_dispatch:
 
 jobs:
