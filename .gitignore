@@ -7,6 +7,9 @@ node_modules/
 *.tsbuildinfo
 
 _build/
+site_libs
+_extensions
+quarto_dist/
 
 # Created by https://www.gitignore.io/api/python
 # Edit at https://www.gitignore.io/?templates=python
