@@ -11,7 +11,11 @@ await micropip.install("ipython_magic_folium>=0.0.6")
 await micropip.install("pandas")
 ```
 
-Online web applications such as [OpenCelliD](https://www.opencellid.org/) allow users to enter uniquely identifying information for a cell tower and in return display the location of the corresponding cell tower on an interactive map.For example, use the above service to identify the location of the cell tower with details:- MCC: 234- MNC: 15- LAC: 24708- CID: 2561566Services such as OpenCellID typically obtain the location data by calling a remote geolocation web service via an Application Programming Interface (API). With access to such an API, we can create our own equivalent service.In this activity you will see how to call the API services *in principle*, if not in fact.
+Online web applications such as [OpenCelliD](https://www.opencellid.org/) allow users to enter uniquely identifying information for a cell tower and in return display the location of the corresponding cell tower on an interactive map.
+
+For example, use the above service to identify the location of the cell tower with details:- MCC: 234- MNC: 15- LAC: 24708- CID: 2561566Services such as OpenCellID typically obtain the location data by calling a remote geolocation web service via an Application Programming Interface (API). With access to such an API, we can create our own equivalent service.
+
+In this activity you will see how to call the API services *in principle*, if not in fact.
 
 ## Walk-through of How to Call the API
 
@@ -75,7 +79,11 @@ except:
 response_data
 ```
 
-A typical response looks something like this:```json{"lon": "-1.145837", "lat": "50.657593", "range": "1000"}```If the location of the devices with the specified MAC addresses are known, a location is determined and returned .The latitude / longitude pair can then be used to identify the approximate location on a map.For example, let's extract out the latitude and longitude into some correspondingly named variables:
+A typical response looks something like this:```json{"lon": "-1.145837", "lat": "50.657593", "range": "1000"}```If the location of the devices with the specified MAC addresses are known, a location is determined and returned .
+
+The latitude / longitude pair can then be used to identify the approximate location on a map.
+
+For example, let's extract out the latitude and longitude into some correspondingly named variables:
 
 ```{pyodide}
 lon = response_data["lon"]
@@ -100,7 +108,11 @@ The magic can be loaded by running the magic command:
 
 `%load_ext folium_magic`
 
-Now we can call on the magic as `%folium_map`. The `-l` parameter lets us pass in comma separated latitude and longitude (no spaces between them) and the `-m` parameter lets us create a marker by passing in a comma separated latitude, longitude and marker label (the latter in quotes). The `-z` parameter sets the zoom level (by default it is set to 10).As well as using literal values, we can pass in values referenced via a variable we have already defined by prefixing the variable name with a `$`.So for example, the following are all valid `folium_magic` commands. - `%folium_map -l 52.0370037,-0.7098603`- `%folium_map -l $lat,$lon -z 14` (referencing the `lat` and `lon` variables defined above and increasing the zoom level)- `%folium_map -m 52.0370037,-0.7098603,"My Marker"`
+Now we can call on the magic as `%folium_map`. The `-l` parameter lets us pass in comma separated latitude and longitude (no spaces between them) and the `-m` parameter lets us create a marker by passing in a comma separated latitude, longitude and marker label (the latter in quotes). The `-z` parameter sets the zoom level (by default it is set to 10).
+
+As well as using literal values, we can pass in values referenced via a variable we have already defined by prefixing the variable name with a `$`.
+
+So for example, the following are all valid `folium_magic` commands. - `%folium_map -l 52.0370037,-0.7098603`- `%folium_map -l $lat,$lon -z 14` (referencing the `lat` and `lon` variables defined above and increasing the zoom level)- `%folium_map -m 52.0370037,-0.7098603,"My Marker"`
 
 :::
 

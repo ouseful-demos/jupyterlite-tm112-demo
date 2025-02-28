@@ -29,7 +29,11 @@ The location data we will consider includes:
 
 ## Activity 6.22 - Geocoding an address using an API
 
-When Google Maps first appeared in 2005, it existed primarily as a browser based application. Developers soon started to identify the remote Google services that the application relied on and an official API soon followed, along with APIs for other geo-related services such as geocoding.Since then, a wide range of other providers have opened up publicly accessible geo-related services, including openly licensed mapping services such as OpenStreetmap, as well as geocoding and geolocation services.Many of these services are accessed programmatically using an API. Some of them, such as the Google APIs, require personal API keys which are associated with registered users and can be used to track, and bill for, usage. Other services, such as Open Street Map, and its associated [Nominatim](https://nominatim.org/release-docs/develop/api/Search/) service, still publish open endpoints that *do not* require an API key.Do not worry in this activity about the detail of how the call to the API is constructed using Python code or how the response is constructed. The main aim of this activity is simply to demonstrate that small amounts of code *can* be used to generate requests to third party online services, parse the response, and do something simple with it. However, if you do peek into the entrails of the data object that is returned, you may be able to identify recognisable things within it.
+When Google Maps first appeared in 2005, it existed primarily as a browser based application. Developers soon started to identify the remote Google services that the application relied on and an official API soon followed, along with APIs for other geo-related services such as geocoding.
+
+Since then, a wide range of other providers have opened up publicly accessible geo-related services, including openly licensed mapping services such as OpenStreetmap, as well as geocoding and geolocation services.
+
+Many of these services are accessed programmatically using an API. Some of them, such as the Google APIs, require personal API keys which are associated with registered users and can be used to track, and bill for, usage. Other services, such as Open Street Map, and its associated [Nominatim](https://nominatim.org/release-docs/develop/api/Search/) service, still publish open endpoints that *do not* require an API key. Do not worry in this activity about the detail of how the call to the API is constructed using Python code or how the response is constructed. The main aim of this activity is simply to demonstrate that small amounts of code *can* be used to generate requests to third party online services, parse the response, and do something simple with it. However, if you do peek into the entrails of the data object that is returned, you may be able to identify recognisable things within it.
 
 ```{pyodide}
 #The requests library makes it easy to call URLs using Python
@@ -42,7 +46,9 @@ Specify the address for which we want to find the geocoded location (you could u
 address = 'Open University, Walton Hall, Milton Keynes, MK7 6AA, UK'
 ```
 
-Now we can construct a URL to call on the Nomimatim web service using this address as an argument.Note that we are also requesting that the service provides a response using JSON (Javascript Object Notation) formatted data.
+Now we can construct a URL to call on the Nomimatim web service using this address as an argument.
+
+Note that we are also requesting that the service provides a response using JSON (Javascript Object Notation) formatted data.
 
 ```{pyodide}
 # Construct a request to the Nominatim geolocation service
@@ -76,15 +82,25 @@ Try to display the location of an address you have geolocated on a map using `fo
 
 ## Activity 6.23 - Geocoding addresses and postcodes
 
-Postcodes are a widely used form of location data, typically capable of identifying a location to a resolution of a few hundred square metres.There are several online services that will return geolocation information given a postcode. You have alreay seen how the Google geolocation API can geocode an address, and in many cases it can also geocode a postcode if it can identify it as such; providing a postcode + country name as the address can make this more reliable.As you are perhaps starting to see from these notebook activities, data is often returned from webservices using the JSON (Javascript Object Notation) data format, although some APIs allow you to specify other formats such as XML.(One advantage of the JSON response is that it can be immediately consumed by a Javascript script called from inside a webpage.)JSON and XML both allow data to be represented in a structured, *tree* based hierarchical format. In this notebook, as well exploring a new API published via the *postcodes.io* website, we'll start to look in a little bit more detail at how the JSON response is structured.
+Postcodes are a widely used form of location data, typically capable of identifying a location to a resolution of a few hundred square metres.
+
+There are several online services that will return geolocation information given a postcode. You have alreay seen how the Google geolocation API can geocode an address, and in many cases it can also geocode a postcode if it can identify it as such; providing a postcode + country name as the address can make this more reliable.
+
+As you are perhaps starting to see from these notebook activities, data is often returned from webservices using the JSON (Javascript Object Notation) data format, although some APIs allow you to specify other formats such as XML.(One advantage of the JSON response is that it can be immediately consumed by a Javascript script called from inside a webpage.)JSON and XML both allow data to be represented in a structured, *tree* based hierarchical format. In this notebook, as well exploring a new API published via the *postcodes.io* website, we'll start to look in a little bit more detail at how the JSON response is structured.
 
 ### Looking at the data object returned from the `postcodes.io` API
 
-The *postcodes.io* API returns data as hierarchical, tree based JSON object. The tree has the following form:![Hierarchical structure of postocdes api data, showing results tree with latitude, longitude and codes children, and codes showing admin_district and parish district](images/postodes_io_struct.png)<!--- http://blockdiag.com/en/blockdiag/demo.html{  "result" -> "postcode";"result" -> "country";"result" -> "longitude";"result" -> "latitude";"dots" [shape = "dots"];"result" -> "dots" [style = "none"];"result" -> "codes";"codes" -> "admin_district";"dots2" [shape = "dots"];"codes" -> "dots2" [style = "none"];"codes" -> "parish";})--->The `result` node is at the top of the tree with children `postcode`, `latitude`, `longitude` and so on. The `codes` child has further children, such as: `admin` and `parish`.
+The *postcodes.io* API returns data as hierarchical, tree based JSON object. The tree has the following form:![Hierarchical structure of postocdes api data, showing results tree with latitude, longitude and codes children, and codes showing admin_district and parish district](./work/images/postodes_io_struct.png)<!--- http://blockdiag.com/en/blockdiag/demo.html{  "result" -> "postcode";"result" -> "country";"result" -> "longitude";"result" -> "latitude";"dots" [shape = "dots"];"result" -> "dots" [style = "none"];"result" -> "codes";"codes" -> "admin_district";"dots2" [shape = "dots"];"codes" -> "dots2" [style = "none"];"codes" -> "parish";})--->The `result` node is at the top of the tree with children `postcode`, `latitude`, `longitude` and so on. The `codes` child has further children, such as: `admin` and `parish`.
 
-In *python*, data structures of this form can be represented using the `dict` ("dictionary") structure, which you will meet elsewhere in the course.The *python* `requests` library has a method that parses a correctly formed JSON response as a *python* `dict`, or more generally, as a set of *nested dicts*. In this case, one `dict` structure may be nested inside another to support child, grandchild, great grandchild, and so on, levels of structure.![Hierarchical structure of postocdes api data, showing results tree with latitude, longitude and codes children, and codes showing admin_district and parish district](images/postodes_io_struct_data.png)The contents of different levels of the nested `dict` data structure can be accessed by using a form of associative, relative addressing. For example, if the variable `mypostcode` is set to the `dict` shown above, we could access the contents of the main `result` part of the data structure by writing: `mypostcode["result"]`.To obtain the value of items in deeper nested parts of the data structure, we simply add further levels of relative addressing. To fetch the value of the `postcode`, we need to specify the path to it via the `result` node: `mypostcode["result"]["postcode"]`. To obtain the value of the `parish` in the `code` part of the data structure, we specify the path to it as `mypostcode["result"]["code"]["parish"]`.
+In *python*, data structures of this form can be represented using the `dict` ("dictionary") structure, which you will meet elsewhere in the course.
 
-Run the following cells to call the `postcodes.io` API with a particular postcode.See if you can make sense of the result that is returned.
+The *python* `requests` library has a method that parses a correctly formed JSON response as a *python* `dict`, or more generally, as a set of *nested dicts*. In this case, one `dict` structure may be nested inside another to support child, grandchild, great grandchild, and so on, levels of structure.![Hierarchical structure of postocdes api data, showing results tree with latitude, longitude and codes children, and codes showing admin_district and parish district](./work/images/postodes_io_struct_data.png)The contents of different levels of the nested `dict` data structure can be accessed by using a form of associative, relative addressing. For example, if the variable `mypostcode` is set to the `dict` shown above, we could access the contents of the main `result` part of the data structure by writing: `mypostcode["result"]`.
+
+To obtain the value of items in deeper nested parts of the data structure, we simply add further levels of relative addressing. To fetch the value of the `postcode`, we need to specify the path to it via the `result` node: `mypostcode["result"]["postcode"]`. To obtain the value of the `parish` in the `code` part of the data structure, we specify the path to it as `mypostcode["result"]["code"]["parish"]`.
+
+Run the following cells to call the `postcodes.io` API with a particular postcode.
+
+See if you can make sense of the result that is returned.
 
 ```{pyodide}
 #The requests library makes it easy to call URLs using Python
@@ -100,7 +116,9 @@ Try rerunning the previous cell using different postcodes - can the service loca
 
 ### Parsing the `postcodes.io` JSON data
 
-Once we have retrieved the data from the API, and cast it as a *python* data object, we can look inside it programmatically.We can also create variables that contain subsets of the response data.
+Once we have retrieved the data from the API, and cast it as a *python* data object, we can look inside it programmatically.
+
+We can also create variables that contain subsets of the response data.
 
 ```{pyodide}
 results = response_data['result']results
@@ -186,7 +204,9 @@ notebookIPaddress
 
 ## Geolocating the IP Address
 
-There are several services available that can attempt to return a geographical location, in the form of latitude and longitude co-ordinates, for a given IP address.Let's start by making sure we have an IP address we can lookup the location for:
+There are several services available that can attempt to return a geographical location, in the form of latitude and longitude co-ordinates, for a given IP address.
+
+Let's start by making sure we have an IP address we can lookup the location for:
 
 ```{pyodide}
 if not notebookIPaddress:
@@ -218,12 +238,15 @@ except:
 
 ### Using `ipstack.com`
 
-Another free lookup service is [ipstack.com](https://ipstack.com/quickstart).As before, we need to construct an appropriate URL to call the geolocation service for our specified IP address.
+Another free lookup service is [ipstack.com](https://ipstack.com/quickstart).
+
+As before, we need to construct an appropriate URL to call the geolocation service for our specified IP address.
 
 ```{pyodide}
 #We can construct a URL based around the IP address
 # of the machine making the request as follows
-# Note the bad practice - I shouldn't share my key# Note also there is no guarantee this key will continue working...
+# Note the bad practice - I shouldn't share my key
+# Note also there is no guarantee this key will continue working...
 KEY='d19510a436ddca4cb01822325ca40178'
 url = f"http://api.ipstack.com/{useIPaddress}?access_key={KEY}"url
 ```
@@ -299,10 +322,14 @@ get_postcode_from_latlon(lat, lon)
 
 ## Optional activities
 
-Using the geolocation data (latitude and longitude) co-ordinates returned from the IP address geolocation activities, look-up the postcode for the returned geographical location.If you are feeling more ambitions, write some simple Python code that will look-up the geolocation of an IP address and return the corresponding postcode for that location.
+Using the geolocation data (latitude and longitude) co-ordinates returned from the IP address geolocation activities, look-up the postcode for the returned geographical location.
+
+If you are feeling more ambitions, write some simple Python code that will look-up the geolocation of an IP address and return the corresponding postcode for that location.
 
 ## Summary
 
-In this section, you have learned how to geocode several different sorts of location identifer - postcodes, postal addresses and IP addresses.You have also seen how we can take the JSON data returned from the geolocation services and parse it as python dict that we can then start to work *as data*, for example, by plotting markers associated with identified locations on an interactive map.
+In this section, you have learned how to geocode several different sorts of location identifer - postcodes, postal addresses and IP addresses.
+
+You have also seen how we can take the JSON data returned from the geolocation services and parse it as python dict that we can then start to work *as data*, for example, by plotting markers associated with identified locations on an interactive map.
 
 

@@ -32,7 +32,11 @@ import math
 
 ## Working With Audio
 
-The following examples are based on a [sonification notebook](https://jupyter.brynmawr.edu/services/public/dblank/jupyter.cs/Sonification.ipynb) published by Doug Blank at Bryn Mawr College.Let's start with a simple demonstration of how to create and play a simple tone (a sine wave). You do not need to understand how the code works in order to run the code cell.If you want the audio player to play the tone automatically when the code cell is run, change the setting from `autoplay=False` to `autoplay=True`.__Run the code cells below now.__
+The following examples are based on a [sonification notebook](https://jupyter.brynmawr.edu/services/public/dblank/jupyter.cs/Sonification.ipynb) published by Doug Blank at Bryn Mawr College.
+
+Let's start with a simple demonstration of how to create and play a simple tone (a sine wave). You do not need to understand how the code works in order to run the code cell.
+
+If you want the audio player to play the tone automatically when the code cell is run, change the setting from `autoplay=False` to `autoplay=True`.__Run the code cells below now.__
 
 ```{pyodide}
 duration = 2 # duration of the tone in seconds
@@ -59,7 +63,9 @@ Audio([tone440(t) for t in np.arange(0, duration, 1/rate)], rate=rate, autoplay=
 
 ## Sonifying Data
 
-As well as playing simple tones, we can also generate audio signals of varying frequencies based on data values contained within a dataset.We will create a couple of helper functions to generate an "audio" dataset from a 
+As well as playing simple tones, we can also generate audio signals of varying frequencies based on data values contained within a dataset.
+
+We will create a couple of helper functions to generate an "audio" dataset from a 
 
 ```{pyodide}
 # Function to find the value of a sine wave of a given frequency at a particular time
