@@ -1,0 +1,21 @@
+---
+title: Using folium magic Python API
+format: live-html
+---
+# Using folium magic Python API
+
+Originally created as an IPython magic command to simplify the creation of `folium` maps in IPython/Jupyter notebook environments, the `folium_map()` utility function simplifies the process of creating maps using a standard Python function in environments that support rich `__repr__` display outputs.
+
+```{pyodide}
+#| autorun: true
+#| echo: false
+import micropip
+await micropip.install("jupyterlite-simple-cors-proxy")
+await micropip.install("ipython_magic_folium==0.0.6")
+await micropip.install("pandas")
+```
+
+```{pyodide}
+from folium_magic import folium_map
+folium_map({"marker":'52.0250,-0.7084,"My marker"',"zoom":12})
+```

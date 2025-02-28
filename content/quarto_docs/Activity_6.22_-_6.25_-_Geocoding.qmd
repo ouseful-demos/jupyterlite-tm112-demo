@@ -1,0 +1,308 @@
+---
+title: Activity 6.22 - 6.25 Geocoding
+format: live-html
+---
+```{pyodide}
+#| autorun: true
+#| echo: false
+import micropip
+await micropip.install("jupyterlite-simple-cors-proxy")
+await micropip.install("ipython_magic_folium==0.0.6")
+await micropip.install("pandas")
+```
+
+In this notebook, you will learn how to geocode different sorts of location data by making requests to several online APIs (*Application Programming Interface*) for latitude and longitude co-ordinates associated with those locations.
+
+The aim of the notebook is *not* to teach you formal approaches for working with APIs or the data that is returned from them. Instead, it's something to whet your curiosity. Something to show you how, with a few lines of Python code, you can start to work with live, third-party datasources and online services to perform real-world programming tasks.
+
+If something doesn't work: *DON'T PANIC*. You won't break your computer and you won't break the internet. And you won't fail the module if you just move on!
+
+The location data we will consider includes:
+
+- <a href="#addresses">Activity 6.22 - Geocoding an address using an API</a>
+- <a href="#postcodes">Activity 6.23 - Geocoding addresses and postcodes</a>
+- <a href="#IPaddresses">Activity 6.24 - Geocoding an IP address</a>
+- <a href="#revgeopostcode">Activity 6.25 - Reverse geocoding a postcode</a>
+
+
+<a name="addresses"></a>
+
+## Activity 6.22 - Geocoding an address using an API
+
+When Google Maps first appeared in 2005, it existed primarily as a browser based application. Developers soon started to identify the remote Google services that the application relied on and an official API soon followed, along with APIs for other geo-related services such as geocoding.Since then, a wide range of other providers have opened up publicly accessible geo-related services, including openly licensed mapping services such as OpenStreetmap, as well as geocoding and geolocation services.Many of these services are accessed programmatically using an API. Some of them, such as the Google APIs, require personal API keys which are associated with registered users and can be used to track, and bill for, usage. Other services, such as Open Street Map, and its associated [Nominatim](https://nominatim.org/release-docs/develop/api/Search/) service, still publish open endpoints that *do not* require an API key.Do not worry in this activity about the detail of how the call to the API is constructed using Python code or how the response is constructed. The main aim of this activity is simply to demonstrate that small amounts of code *can* be used to generate requests to third party online services, parse the response, and do something simple with it. However, if you do peek into the entrails of the data object that is returned, you may be able to identify recognisable things within it.
+
+```{pyodide}
+#The requests library makes it easy to call URLs using Python
+import requests
+```
+
+Specify the address for which we want to find the geocoded location (you could use your own address here):
+
+```{pyodide}
+address = 'Open University, Walton Hall, Milton Keynes, MK7 6AA, UK'
+```
+
+Now we can construct a URL to call on the Nomimatim web service using this address as an argument.Note that we are also requesting that the service provides a response using JSON (Javascript Object Notation) formatted data.
+
+```{pyodide}
+# Construct a request to the Nominatim geolocation service
+# using our desired address
+# Obtain the response in JSON data format
+# Define headers with a custom User-Agent
+headers = {"User-Agent": "OpenUniversity-TM112/1.0"}
+
+r = requests.get("https://nominatim.openstreetmap.org/search", headers=headers,
+                 params={'q': address, 'format':'json'})
+                 
+response_data = r.json()
+response_data
+```
+
+Try rerunning the previous cell with an address that is familiar to you. Does the API find it?
+
+### Optional Activities
+
+Try to display the location of an address you have geolocated on a map using `folium_magic`. Remember, you can pass in the co-ordinates literally; for example: `%folium_map -m 48.8584,2.2945`. Set the zoom level by adding `-z ZOOM_LEVEL`, eg `-z 17` or `-z 12`.
+
+```{pyodide}
+%load_ext folium_magic
+```
+
+```{pyodide}
+#Go for it... :-)
+```
+
+<a name="postcodes"></a>
+
+## Activity 6.23 - Geocoding addresses and postcodes
+
+Postcodes are a widely used form of location data, typically capable of identifying a location to a resolution of a few hundred square metres.There are several online services that will return geolocation information given a postcode. You have alreay seen how the Google geolocation API can geocode an address, and in many cases it can also geocode a postcode if it can identify it as such; providing a postcode + country name as the address can make this more reliable.As you are perhaps starting to see from these notebook activities, data is often returned from webservices using the JSON (Javascript Object Notation) data format, although some APIs allow you to specify other formats such as XML.(One advantage of the JSON response is that it can be immediately consumed by a Javascript script called from inside a webpage.)JSON and XML both allow data to be represented in a structured, *tree* based hierarchical format. In this notebook, as well exploring a new API published via the *postcodes.io* website, we'll start to look in a little bit more detail at how the JSON response is structured.
+
+### Looking at the data object returned from the `postcodes.io` API
+
+The *postcodes.io* API returns data as hierarchical, tree based JSON object. The tree has the following form:![Hierarchical structure of postocdes api data, showing results tree with latitude, longitude and codes children, and codes showing admin_district and parish district](images/postodes_io_struct.png)<!--- http://blockdiag.com/en/blockdiag/demo.html{  "result" -> "postcode";"result" -> "country";"result" -> "longitude";"result" -> "latitude";"dots" [shape = "dots"];"result" -> "dots" [style = "none"];"result" -> "codes";"codes" -> "admin_district";"dots2" [shape = "dots"];"codes" -> "dots2" [style = "none"];"codes" -> "parish";})--->The `result` node is at the top of the tree with children `postcode`, `latitude`, `longitude` and so on. The `codes` child has further children, such as: `admin` and `parish`.
+
+In *python*, data structures of this form can be represented using the `dict` ("dictionary") structure, which you will meet elsewhere in the course.The *python* `requests` library has a method that parses a correctly formed JSON response as a *python* `dict`, or more generally, as a set of *nested dicts*. In this case, one `dict` structure may be nested inside another to support child, grandchild, great grandchild, and so on, levels of structure.![Hierarchical structure of postocdes api data, showing results tree with latitude, longitude and codes children, and codes showing admin_district and parish district](images/postodes_io_struct_data.png)The contents of different levels of the nested `dict` data structure can be accessed by using a form of associative, relative addressing. For example, if the variable `mypostcode` is set to the `dict` shown above, we could access the contents of the main `result` part of the data structure by writing: `mypostcode["result"]`.To obtain the value of items in deeper nested parts of the data structure, we simply add further levels of relative addressing. To fetch the value of the `postcode`, we need to specify the path to it via the `result` node: `mypostcode["result"]["postcode"]`. To obtain the value of the `parish` in the `code` part of the data structure, we specify the path to it as `mypostcode["result"]["code"]["parish"]`.
+
+Run the following cells to call the `postcodes.io` API with a particular postcode.See if you can make sense of the result that is returned.
+
+```{pyodide}
+#The requests library makes it easy to call URLs using Python
+import requests
+```
+
+```{pyodide}
+postcode = 'MK7 6AA'r = requests.get('https://api.postcodes.io/postcodes/{PC}'.format(PC=postcode))response_data = r.json()
+response_data
+```
+
+Try rerunning the previous cell using different postcodes - can the service locate your home postcode?
+
+### Parsing the `postcodes.io` JSON data
+
+Once we have retrieved the data from the API, and cast it as a *python* data object, we can look inside it programmatically.We can also create variables that contain subsets of the response data.
+
+```{pyodide}
+results = response_data['result']results
+```
+
+Let's extract the latitude and longitude values. We can reach them in a variety of ways.
+
+```{pyodide}
+# Index into the full response
+datalat = response_data['result']['latitude']
+
+# Index into the subsetted
+datalon = results['longitude']
+
+#Display the result
+print(lat,lon)
+```
+
+### Optional Activities
+
+Use `folium magic` to map the location of an address you have provided;
+
+- see if you can create a variable that contains the formatted address of a location object retrieved from the postcods.io API;
+- see if you can write a loop that will look up the geolocations of several postcodes, one at a time, appending each response object to a list of responses. To be nice to the API import the *python* `time` library and add the statement `time.sleep(1)` inside the loop to pause its execution for one second during each iteration.
+- use some `folium_magic` to display one or markers for each of your (looped) postcodes. You can use the `-M` switch to add multiple markers from a Python variable; pass in the name of a variable that refers to *without* the $ prefix. For example, if the markers are assigned to the variable `markers` use the magic `%folium_map -M markers`:
+    - a single `dict`, such as `markers={'lat':52.0250, 'lng':-0.7084,'popup':'Open University, Walton Hall'}`
+    - a single ordered `list`, such as `markers=[52.0250, -0.7084,'Open University, Walton Hall']`
+    - a `list` of `dict`s, such as `markers=[{'lat':52.0250, 'lng':-0.7084,'popup':'Open University, Walton Hall'},{'lat':52.0, 'lng':-0.70,'popup':'Open University, Walton Hall'}]`
+    - a `list` of ordered `lists`, such as `markers=[[52.0250, -0.7084,'Open University, Walton Hall'], [52., -0.7,'Open University, Walton Hall']]`
+
+<a name="IPaddresses"></a>
+
+## Activity 6.24 - Geocoding an IP address
+
+As well as looking up geolocation data for a *postal* address, we can also try to look up a location based on the IP address of a computer. There are seveal websites that allow you to lookup the IP address of the device you are using to connect to the internet, and several webservices too.
+
+## Looking up your IP address
+
+One service for looking up your IP address is the Amazon Web Services (AWS) CheckIP service: http://checkip.amazonaws.com/ .
+
+You can manually look up the IP address of your computer by visiting the URL http://checkip.amazonaws.com in your browser.
+
+Make a copy of the IP address it returns and assign that address to the `myIPaddress` variable below:
+
+```{pyodide}
+myIPaddress = 'your.ip.address.here'
+```
+
+Alternatively, we can automate the request. For example, by using the `requests` library, we can call the AWS CheckIP address and access the data response (`text`).
+
+*If you are running the notebooks on a remote server, for example, by using the OU Compute Home service, the IP address will correspond to the IP address of the server that made the request.*
+
+Note that the AWS `checkip` service returns an IP address terminated by an end of line (`\n`) character. We can strip any whitespace using the Pyhton `.strip()` string method.
+
+*If we are running the request from a JupyterLite environment, we need to make the request via a proxy service that sets correct headers on the the response.*
+
+```{pyodide}
+# If we are in a JupyterLite environment, we need to proxy the request
+import requests
+from urllib.parse
+import quote
+def cors_proxy(gurl):
+    """CORS proxy for GET resources."""
+    _url = f"https://corsproxy.io/?{quote(gurl)}"
+    return requests.get(_url).content.decode().strip()
+```
+
+```{pyodide}
+#The requests library makes it easy to call URLs using Python
+import requests
+import json
+notebookIPaddress = None
+
+# The following service responds with an IP address
+check_ip_url = "http://checkip.amazonaws.com/"
+try:
+    notebookIPaddress = requests.get(check_ip_url).text.strip()
+except:
+    notebookIPaddress = cors_proxy(check_ip_url)
+
+notebookIPaddress
+```
+
+## Geolocating the IP Address
+
+There are several services available that can attempt to return a geographical location, in the form of latitude and longitude co-ordinates, for a given IP address.Let's start by making sure we have an IP address we can lookup the location for:
+
+```{pyodide}
+if not notebookIPaddress:
+    # Use myIPaddress or a dummy address
+    if myIPaddress == 'your.ip.address.here':
+        # Use a valid dummy address
+        useIPaddress = "137.108.152.229"
+    else:
+        useIPaddress = myIPaddress
+else:
+    # Use notebook IPaddress
+    useIPaddress = notebookIPaddress
+```
+
+### Using `geolocation-db.com`
+
+One free service for checking locations of IP addresses is `geolocation-db.com`. *Note that this database may be out-of-date, in part as a conseqence of the way that IP addresses are recycled.*
+
+```{pyodide}
+request_url = 'https://geolocation-db.com/json/' + useIPaddress
+
+try:
+    response = requests.get(request_url).json()
+except:
+    response_ = cors_proxy(request_url)
+    # Cast the response to a json object
+    response = json.loads(response_)response
+```
+
+### Using `ipstack.com`
+
+Another free lookup service is [ipstack.com](https://ipstack.com/quickstart).As before, we need to construct an appropriate URL to call the geolocation service for our specified IP address.
+
+```{pyodide}
+#We can construct a URL based around the IP address
+# of the machine making the request as follows
+# Note the bad practice - I shouldn't share my key# Note also there is no guarantee this key will continue working...
+KEY='d19510a436ddca4cb01822325ca40178'
+url = f"http://api.ipstack.com/{useIPaddress}?access_key={KEY}"url
+```
+
+As with the other APIs we have used, the response is provided as a JSON object. You may be getting a feel now for how we might be able to make the request and handle this response.
+
+```{pyodide}
+try:
+    r = requests.get(url)
+    response_data = r.json()
+except:
+    response_data = json.loads(cors_proxy(url))
+    response_data
+```
+
+If you are using a commercial ISP when you look up your IP address via your browser location bar using a service such as http://checkip.amazonaws.com/ - for example, if you are using home broadband through a large ISP - you may find that the location identified is nowhere near you. In this case, the location may refer to the physical network datacentre that is managing your network connection.
+
+If you tried to geocode the IP address in `notebookIPaddress`, the result may surprise you. If the notebook and the python process associated with it is running on a server hosted in the cloud. In some cases, the response may often be empty as the location of the IP address is unknown - the physical location of the IP address may be hard to pin down if the servers they are assigned to are floating in the cloud!
+
+## Optional activities
+
+Using `folium_magic`, or otherwise, plot the various locations returned from your IP address lookups onto a map.
+
+<a name="revgeopostcode"></a>## Activity 6.25 - Reverse geocoding a postcode*Reverse geocoding* refers to the ability to go *from* a geocoded location, represented as a latitude/longitude pair, for example, back to an address or location.
+
+The *postcodes.io* service supports reverse geocoding by accpeting a latitude/longitude pair and returning the postcode area associated with it, along with a data about other administrative geography regions that the location falls within.
+
+```{pyodide}
+#Use the OU Walton Hall Location
+lat, lon = (52.0250, -0.7084)
+```
+
+```{pyodide}
+r = requests.get(f"https://api.postcodes.io/postcodes?lon={lon}&lat={lat}")
+response_data = r.json()
+response_data
+```
+
+One thing to note from this response is that it actually returns *two* locations. We can write a simple bit of Python code to iterate through the results list and pull out the postcodes.
+
+```{pyodide}
+#Test - can we retrieve the postcode from the first item (list index 0) in the results list?response_data['result'][0]['postcode']
+```
+
+```{pyodide}
+#Iterate through all the results
+for result in response_data['result']:
+    print(result['postcode'])
+```
+
+Finally, let's create a function to display the postcode(s) associated with a supplied latitude, longitude pair.
+
+```{pyodide}
+def get_postcode_from_latlon(lat, lon):
+    ''' Use the postodes.io API to retrieve postcodes for a location'''
+    r = requests.get(f"https://api.postcodes.io/postcodes?lon={lon}&lat={lat}")
+    #Parse the JSON response
+    json = r.json()
+    #Extract the results list
+    results = json['result']
+    #Create an empty list to hold the postcodes
+    postcodes = []
+    #Iterate through the results
+    for result in results:
+        #Extract the postcode
+        postcodes.append(result['postcode'])
+    return postcodes
+```
+
+```{pyodide}
+get_postcode_from_latlon(lat, lon)
+```
+
+## Optional activities
+
+Using the geolocation data (latitude and longitude) co-ordinates returned from the IP address geolocation activities, look-up the postcode for the returned geographical location.If you are feeling more ambitions, write some simple Python code that will look-up the geolocation of an IP address and return the corresponding postcode for that location.
+
+## Summary
+
+In this section, you have learned how to geocode several different sorts of location identifer - postcodes, postal addresses and IP addresses.You have also seen how we can take the JSON data returned from the geolocation services and parse it as python dict that we can then start to work *as data*, for example, by plotting markers associated with identified locations on an interactive map.
+
+
