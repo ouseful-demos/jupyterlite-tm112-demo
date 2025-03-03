@@ -57,7 +57,7 @@ jobs:
       - name: Build quarto site
         run: |
           cd content
-          quarto add r-wasm/quarto-live --no-prompt
+          quarto add r-wasm/quarto-live@0.1.2 --no-prompt
           quarto render quarto_docs/ --no-execute --output-dir ../quarto_dist
           cp -r quarto_dist/ dist/quarto_output/
 
