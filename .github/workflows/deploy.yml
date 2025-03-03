@@ -48,10 +48,13 @@ jobs:
           jupyter kernelspec list  
           jupyter-book build content/work --path-output book_output
           cp -r book_output/_build/html dist/book_output/
-          
+         
+      
+      - uses: quarto-dev/quarto-actions/setup@v2
+
       - name: Build quarto site
         run: |
-          ARCH=$(uname -m) && if [ \"$ARCH\" = \"aarch64\" ] || [ \"$ARCH\" = \"arm64\" ]; then QUARTO_ARCH=\"arm64\"; else QUARTO_ARCH=\"amd64\"; fi && wget \"https://github.com/quarto-dev/quarto-cli/releases/download/v1.6.40/quarto-1.6.40-linux-${QUARTO_ARCH}.tar.gz\" && tar -C ~/opt -xvzf \"quarto-1.6.40-linux-${QUARTO_ARCH}.tar.gz\" && quarto add r-wasm/quarto-live
+          quarto add r-wasm/quarto-live
           quarto render quarto_docs/ --no-execute --output-dir ../quarto_dist
           cp -r quarto_dist/ dist/quarto_output/
 
