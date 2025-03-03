@@ -5,25 +5,47 @@ format: live-html
 ```{pyodide}
 #| autorun: true
 #| echo: false
+print("Importing required Pyodide packages...")
 import micropip
 await micropip.install("jupyterlite-simple-cors-proxy")
-await micropip.install("ipython_magic_folium>=0.0.6")
+await micropip.install("ipython_magic_folium==0.0.6")
 await micropip.install("pandas")
+print("All necessary Pyodide packages loaded.")
 ```
 
 Online web applications such as [OpenCelliD](https://www.opencellid.org/) allow users to enter uniquely identifying information for a cell tower and in return display the location of the corresponding cell tower on an interactive map.
 
-For example, use the above service to identify the location of the cell tower with details:- MCC: 234- MNC: 15- LAC: 24708- CID: 2561566Services such as OpenCellID typically obtain the location data by calling a remote geolocation web service via an Application Programming Interface (API). With access to such an API, we can create our own equivalent service.
+For example, use the above service to identify the location of the cell tower with details:
+
+- MCC: 234
+- MNC: 15
+- LAC: 24708
+- CID: 2561566
+
+Services such as OpenCellID typically obtain the location data by calling a remote geolocation web service via an Application Programming Interface (API). With access to such an API, we can create our own equivalent service.
 
 In this activity you will see how to call the API services *in principle*, if not in fact.
 
 ## Walk-through of How to Call the API
 
-If you use your browser developer tools to monitor your browser's network activity as you lookup a cell tower ID using the OpenCellID webservice, you might notice a request is made to a webservice that is used to lookup the location of the cell tower :![OpenCellID website - API call for cell tower geolocation from cell tower identifying data](./work/images/OpenCelliD_api_call.png)The request URL has the form:`https://opencellid.org/ajax/searchCell.php?mcc=234&mnc=15&lac=24708&cell_id=2561566`The location information is then used by calls to other services that can render the map, along with the location of cell towers in that general area.
+If you use your browser developer tools to monitor your browser's network activity as you lookup a cell tower ID using the OpenCellID webservice, you might notice a request is made to a webservice that is used to lookup the location of the cell tower:
+
+![OpenCellID website - API call for cell tower geolocation from cell tower identifying data](./work/images/OpenCelliD_api_call.png)
+
+The request URL has the form:`https://opencellid.org/ajax/searchCell.php?mcc=234&mnc=15&lac=24708&cell_id=2561566`
+
+The location information is then used by calls to other services that can render the map, along with the location of cell towers in that general area.
 
 The following walk through demonstrates the steps used to make a request to that API.*Note that the following activity cannot be guaranteed to work. Webservices and APIs often use cookies and other techniques to block requests that are not made by an authorised user from an appropriate client (such as a web browser).*
 
-To call the API, or look up a cell tower location using a third party web app with its own API access, we need four pieces of data:- the network operator mobile country code (MCC): for example, the UK MCC code is 234- the mobile network code (MNC): for example, the Vodafone UK MNC is 15- the cell tower location area code (LAC): for example, 24708- the cell tower cell ID (CellID): for example, 2561566To call the service, we construct a URL as defined for a particular API and make a request to that URL using the *python* `requests` package.
+To call the API, or look up a cell tower location using a third party web app with its own API access, we need four pieces of data:
+
+- the network operator mobile country code (MCC): for example, the UK MCC code is 234
+- the mobile network code (MNC): for example, the Vodafone UK MNC is 15
+- the cell tower location area code (LAC): for example, 24708
+- the cell tower cell ID (CellID): for example, 2561566
+
+To call the service, we construct a URL as defined for a particular API and make a request to that URL using the *python* `requests` package.
 
 ```{pyodide}
 #The requests library makes it easy to call URLs using Python
@@ -97,7 +119,7 @@ lon, lat
 
 Armed with the latitude and longitude of a location, we can use those co-ordinates to place a marker on a map to reveal that location in more human understandable terms.
 
-The Python `ipython_folium_magic` [[docs](https://github.com/psychemedia/ipython_magic_folium)] package provides a Python function, and some associated IPython magic, that supports the creation of embedded Google Maps in a Jupyter notebook.
+The Python `ipython_folium_magic` [[docs](https://github.com/psychemedia/ipython_magic_folium)] package provides a Python function, and some associated IPython magic, that supports the creation of embedded Google Maps in a Jupyter notebook using the `folium` Python package.
 
 ::: {.callout-tip collapse="true" title="Using the IPython magic"}
 The IPython magic provides a direct, command-line style like syntax for generating an interactive map.
@@ -116,10 +138,11 @@ So for example, the following are all valid `folium_magic` commands. - `%folium_
 
 :::
 
-The `folium_map()` function imported from the []`folium_magic`](https://github.com/psychemedia/ipython_magic_folium) packages provides a simplified way of 
+The `folium_map()` function imported from the [`folium_magic`](https://github.com/psychemedia/ipython_magic_folium) package provides a simplified way of creating `folium` maps:
 
 ```{pyodide}
 from folium_magic import folium_map
+
 folium_map({"marker":'52.0250,-0.7084,"My marker"',"zoom":14})
 ```
 

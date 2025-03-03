@@ -15,8 +15,12 @@ The notebook makes use of the python *pandas* package to represent and *visualis
 #IPython package for embedding an audio player in a notebook
 from IPython.display import Audio
 #The ipwidgets.interact package supports interactive widget creation
-from ipywidgets import interact#Configure the notebook to display charts inline
-%matplotlib inline
+from ipywidgets import interact
+
+#Configure the notebook to display charts inline
+#%matplotlib inline
+import matplotlib.pyplot as plt
+
 #Import a routine to plot simple datasets
 from matplotlib.pyplot import plot
 ```
@@ -52,11 +56,16 @@ rate = 44100 # sampling rate of the tone
 def make_tone(frequency):
     def f(t):
         return math.sin(2 * math.pi * frequency * t)
-    return ftone440 = make_tone(440)
+    return f
+    
+tone440 = make_tone(440)
     
 #Visualise the tone over a short period (0.1s)
 plot([tone440(t) for t in np.arange(0, .01, 1/rate)]);
+plt.show()
+```
 
+```{pyodide}
 #Generate the tone and play it through a notebook embedded audio player
 Audio([tone440(t) for t in np.arange(0, duration, 1/rate)], rate=rate, autoplay=False)
 ```
@@ -111,17 +120,23 @@ Generate a sample dataset with several columns, each representing a set frequenc
 
 ```{pyodide}
 #Generate the dataset and preview it as a chart
-numpoints = 50df = pd.DataFrame({'x':np.arange(0, numpoints)})
+numpoints = 50
+df = pd.DataFrame({'x':np.arange(0, numpoints)})
+
 #Generate a column with values proportional to time
 df['y'] =  df['x'] / numpoints
+
 #Generate a column with values inversely proportional to time
 df['y2'] = 1 - df['y']
+
 #Generate a column with values proportional to time with the addition of random noise
 df['y3'] = df.apply(lambda x: x['y']+((random.random()/5) - 0.1), axis=1)
 ax = df.plot(kind='scatter', x='x', y='y', color='grey')
 df.plot(kind='scatter', x='x', y='y2', color='green', ax=ax)
 df.plot(kind='scatter', x='x', y='y3', color='red', ax=ax)
-ax.set_xlabel('Sample number')ax.set_ylabel('Value');
+ax.set_xlabel('Sample number')
+ax.set_ylabel('Value')
+plt.show()
 ```
 
 ```{pyodide}
@@ -136,7 +151,10 @@ Change the `col = ` setting to one of the other columns (`y`, `y2`, `y3`) to cho
 #Select a column to visualise and sonify
 col = 'y'
 df.plot(kind='scatter', x= 'x', y=col);
+plt.show()
+```
 
+```{pyodide}
 Audio(makeAudio(df[col], duration, rate, minf, maxf), rate=rate, autoplay=False)
 ```
 
@@ -145,17 +163,25 @@ Audio(makeAudio(df[col], duration, rate, minf, maxf), rate=rate, autoplay=False)
 ```{pyodide}
 #Example of reordering a list of numbers in a random order
 nums = list(range(0,10))
-random.shuffle(nums)nums
+random.shuffle(nums)
+
+nums
 ```
 
 ```{pyodide}
 samples = 100df = pd.DataFrame({'x':np.arange(0,samples)})
-nums=list(range(0,samples))random.shuffle(nums)
-df['y'] = numsdf.plot(kind='scatter',x= 'x',y='y');
+nums=list(range(0,samples))
+
+random.shuffle(nums)
+df['y'] = nums
+
+df.plot(kind='scatter',x= 'x',y='y')
+plt.show()
 ```
 
 ```{pyodide}
 df.plot(kind='scatter',x= 'x',y='y');Audio(makeAudio(df['y'], duration, rate), rate=rate, autoplay=False)
+plt.show()
 ```
 
 ## Generating Scatterplots With a Specified Correlation
@@ -163,10 +189,11 @@ df.plot(kind='scatter',x= 'x',y='y');Audio(makeAudio(df['y'], duration, rate), r
 We can create a function that will generate scatterplots with a specified correlation.We can then create an interactive scatterplot explorer that allows us to both visualise and sonify scatterplots with different correlations.
 
 ```{pyodide}
-#ish via https://stackoverflow.com/a/18684433/454773#If the correlation is set to 1 we sometimes get a warning that we can ignore...
+#ish via https://stackoverflow.com/a/18684433/454773
+#If the correlation is set to 1 we sometimes get a warning that we can ignore...
 #np.warnings.filterwarnings('ignore', r'covariance')
 def generateCorrelatedData(correlation):
-    '' Function to create a two dimensional dataset with a specified correlation between values '''
+    '''Function to create a two dimensional dataset with a specified correlation between values '''
     xmin=0
     xmax=100
     ymin=0
@@ -181,7 +208,7 @@ def generateCorrelatedData(correlation):
     covariances = [[stds[0]**2, stds[0]*stds[1]*correlation], [stds[0]*stds[1]*correlation, stds[1]**2]]
     m = np.random.multivariate_normal(means, covariances, 50)
     #Represent the data as a dataframe
-    df = pd.DataFrame(m, columns=['x','y']
+    df = pd.DataFrame(m, columns=['x','y'])
     #Sort the dataframe by increasing x
     df = df.sort_values('x').reset_index()
     return df
@@ -190,6 +217,8 @@ def generateCorrelatedData(correlation):
 We can now use that function as part of an interactive scatterplot explorer.
 
 ```{pyodide}
+# TO DO - this needs updating for quarto eg to a shiny app?
+
 @interact(correlation=(0,1,0.05))
 def correlatedScatter(correlation=1.0):
     df=generateCorrelatedData(correlation)

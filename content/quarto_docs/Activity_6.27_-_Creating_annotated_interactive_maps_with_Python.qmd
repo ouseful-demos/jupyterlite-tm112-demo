@@ -5,10 +5,12 @@ format: live-html
 ```{pyodide}
 #| autorun: true
 #| echo: false
+print("Importing required Pyodide packages...")
 import micropip
 await micropip.install("jupyterlite-simple-cors-proxy")
 await micropip.install("ipython_magic_folium==0.0.6")
 await micropip.install("pandas")
+print("All necessary Pyodide packages loaded.")
 ```
 
 This notebook demonstrates how to create a simple, interactive, embedded map using the Python `folium` package. You will also have an opportunity to create and save your own interactive map.
@@ -17,11 +19,13 @@ The package uses predefined templates to generate HTML and Javascript code to re
 
 
 ```{pyodide}
-# Run this cell first to import the folium package to access the maps
+# Run this cell first to import the folium package
+# to support map creation
 import folium
 ```
 
 ## Creating a Map of the OU Campus
+
 We can create a `folium` map object by calling the `folium.Map()` function.
 
 The map is centred on a particular location specified by using its latitude and longitude, using an optionally declared zoom level.
@@ -32,6 +36,7 @@ Stating just a variable name returns the value of the object - in this case, an 
 
 ```{pyodide}
 # Run this cell to create the map object
+
 mymap = folium.Map(location=[52.0236, -0.7088], zoom_start=15)
 
 # Display the map
@@ -48,6 +53,7 @@ Add the `folium.ClickForMarker()` function to the map and then add one or more m
 #Add the ClickForMarker() functionality to the map
 
 folium.ClickForMarker().add_to(mymap)
+
 #Display the map
 mymap
 ```
@@ -93,7 +99,9 @@ Zoom in to a particular location on the map using the map's +/- options, draggin
 ```{pyodide}
 #Create a new map...
 myNewMap=folium.Map()
-#...within which you can interactively display the latitude and longitude of clicked on locations
+
+# ...within which you can interactively display
+# the latitude and longitude of clicked on locations
 
 folium.LatLngPopup().add_to(myNewMap)
 #Display the map
@@ -108,18 +116,37 @@ Use the `LatLngPopup()` tool to find any latitude and longitude co-ordinates you
 
 ```{pyodide}
 #Create a map object, centred on your home, and at an appropriate zoom level
+
+# Add your code to this cell...
+
+# ...
 ```
 
 ```{pyodide}
-# Programmatically add two or three markers, with appropriate labels, locating nearby points of interest
+# Programmatically add two or three markers,
+# with appropriate labels, 
+# locating nearby points of interest
+
+
+# Add your code to this cell...
+
+# ...
 ```
 
 ```{pyodide}
-#Render the map in the notebook
+# Render the map in the notebook
+
+# Add your code to this cell...
+
+# ...
 ```
 
 ```{pyodide}
 #Save the map - eg as myHomeMap.html
+
+# Add your code to this cell...
+
+# ...
 ```
 
 View the HTML version of your map directly in a new browser tab.

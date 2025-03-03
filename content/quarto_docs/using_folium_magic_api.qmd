@@ -13,9 +13,11 @@ import micropip
 await micropip.install("jupyterlite-simple-cors-proxy")
 await micropip.install("ipython_magic_folium==0.0.6")
 await micropip.install("pandas")
+print("All necessary Pyodide packages loaded.")
 ```
 
 ```{pyodide}
 from folium_magic import folium_map
+
 folium_map({"marker":'52.0250,-0.7084,"My marker"',"zoom":12})
 ```

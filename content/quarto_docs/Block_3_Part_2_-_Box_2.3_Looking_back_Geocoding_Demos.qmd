@@ -5,10 +5,13 @@ format: live-html
 ```{pyodide}
 #| autorun: true
 #| echo: false
+
 import micropip
 await micropip.install("jupyterlite-simple-cors-proxy")
 await micropip.install("ipython_magic_folium==0.0.6")
 await micropip.install("pandas")
+print("All necessary Pyodide packages loaded.")
+
 ```
 
 In this notebook, you will have a chance to explore how Python `dict`s can be used to represent hierarchically structured data.

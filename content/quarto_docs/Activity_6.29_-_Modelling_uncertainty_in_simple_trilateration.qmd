@@ -3,9 +3,9 @@ title: Activity 6.29 Modeling Uncertainty
 format: live-html
 ---
 
-
 This notebook provides a simple interactive example of how the location and signal strength of three base stations can affect the amount of uncertainty associated with locating a receiver based on its relative distance from each of them.
 
+__For the quarto book version of this page, the app needs updating to a shiny app... TO DO__
 
 ## Trilateration Demo
 
@@ -16,8 +16,20 @@ The *r* value sets the distance over which the cell tower can be detected, model
 The location of a target receiver is identified as a red dot. The dark blue area represents the uncertainty in locating the receiver based on its ability to see two or more of the cell towers.__Move the sliders to change the relative locations and ranges of each of the cell towers. See how it affects the uncertainty in determining location based on the ability to detect two or more cell towers and a knowledge of their locations.__
 
 ```{pyodide}
-#| extensions: {jupyter_dashboards: {version: 1, views: {grid_default: {hidden: true}, report_default: {hidden: true}}}}
-# NOTE THAT THE WIDGETS USED IN THIS DEMO MAY NOT WORK IN THE INTERACTIVE TEXTBOOK VIEW%pip install --quiet ipywidgets==8.1.1 matplotlib localization-patchedimport tridash
+#| autorun: true
+#| echo: false
+print("Importing required Pyodide packages...")
+import micropip
+await micropip.install("localization-patched")
+print("All necessary Pyodide packages loaded.")
+
+```
+
+```{pyodide}
+# NOTE THAT THE WIDGETS USED IN THIS DEMO MAY NOT WORK IN THE INTERACTIVE TEXTBOOK VIEW
+%pip install --quiet ipywidgets==8.1.1 matplotlib localization-patched
+
+import tridash
 ```
 
 You can look at the python code used to generate the interactive here: [tridash.py](tridash.py)

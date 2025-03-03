@@ -1,4 +1,4 @@
-# Quarto pipleline
+# Quarto pipeline
 
 mkdir -p quarto_docs
 

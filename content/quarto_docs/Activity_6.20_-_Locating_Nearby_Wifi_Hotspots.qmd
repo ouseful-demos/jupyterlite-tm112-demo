@@ -6,10 +6,12 @@ format: live-html
 ```{pyodide}
 #| autorun: true
 #| echo: false
+print("Importing required Pyodide packages...")
 import micropip
 await micropip.install("jupyterlite-simple-cors-proxy")
-await micropip.install("ipython_magic_folium>=0.0.6")
+await micropip.install("ipython_magic_folium==0.0.6")
 await micropip.install("pandas")
+print("All necessary Pyodide packages loaded.")
 ```
 
 As well as looking up cell tower locations, there are also various third party services that can be used to look up the location of WiFi hotspots from uniquely identifying information that may be disclosed by a WiFi router.
@@ -48,6 +50,8 @@ From a terminal, the following command will attempt to return the BSSID of a con
 Typically, you will get a `<redacted>` response becuase this command has not been granted permission to access location services. Various third party solutions ([example](https://github.com/noperator/wifi-unredactor)) claim to offer a workaround for granting permissions to the `wdutil` command line command for accessing this data.
 
 *For more information, simply run: `sudo wdutil info`*
+
+:::
 
 ### Windows
 
