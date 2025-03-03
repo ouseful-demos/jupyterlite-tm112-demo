@@ -51,6 +51,8 @@ jobs:
          
       
       - uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          version: 1.6.40
 
       - name: Build quarto site
         run: |
