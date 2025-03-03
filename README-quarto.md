@@ -1,9 +1,9 @@
 # Quarto pipeline
 
 
- quarto add r-wasm/quarto-live
+ quarto add r-wasm/quarto-live --no-prompt  
 
- 
+
 mkdir -p quarto_docs
 
 for file in *.ipynb; do
