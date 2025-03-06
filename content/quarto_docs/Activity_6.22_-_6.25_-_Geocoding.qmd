@@ -127,7 +127,7 @@ JSON and XML both allow data to be represented in a structured, *tree* based hie
 
 The *postcodes.io* API returns data as hierarchical, tree based JSON object. The tree has the following form:
 
-![Hierarchical structure of postocdes api data, showing results tree with latitude, longitude and codes children, and codes showing admin_district and parish district](./work/images/postodes_io_struct.png)
+![Hierarchical structure of postocdes api data, showing results tree with latitude, longitude and codes children, and codes showing admin_district and parish district](./images/postodes_io_struct.png)
 
 <!--- http://blockdiag.com/en/blockdiag/demo.html{  "result" -> "postcode";"result" -> "country";"result" -> "longitude";"result" -> "latitude";"dots" [shape = "dots"];"result" -> "dots" [style = "none"];"result" -> "codes";"codes" -> "admin_district";"dots2" [shape = "dots"];"codes" -> "dots2" [style = "none"];"codes" -> "parish";})--->
 
@@ -137,7 +137,7 @@ In *python*, data structures of this form can be represented using the `dict` ("
 
 The *python* `requests` library has a method that parses a correctly formed JSON response as a *python* `dict`, or more generally, as a set of *nested dicts*. In this case, one `dict` structure may be nested inside another to support child, grandchild, great grandchild, and so on, levels of structure.
 
-![Hierarchical structure of postocdes api data, showing results tree with latitude, longitude and codes children, and codes showing admin_district and parish district](./work/images/postodes_io_struct_data.png)
+![Hierarchical structure of postocdes api data, showing results tree with latitude, longitude and codes children, and codes showing admin_district and parish district](./images/postodes_io_struct_data.png)
 
 The contents of different levels of the nested `dict` data structure can be accessed by using a form of associative, relative addressing. For example, if the variable `mypostcode` is set to the `dict` shown above, we could access the contents of the main `result` part of the data structure by writing: `mypostcode["result"]`.
 
