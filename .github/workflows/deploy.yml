@@ -49,17 +49,15 @@ jobs:
           jupyter-book build content/work --path-output book_output
           cp -r book_output/_build/html dist/book_output/
          
-      
       - uses: quarto-dev/quarto-actions/setup@v2
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build quarto site
         run: |
-          cd content
+          cd content/quarto_docs
           quarto add r-wasm/quarto-live@v0.1.2 --no-prompt
-          quarto render quarto_docs/ --no-execute --output-dir ../quarto_dist
-          cp -r quarto_dist/ dist/quarto_output/
+          quarto render ./ --no-execute --output-dir ../../dist/quarto_output
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
