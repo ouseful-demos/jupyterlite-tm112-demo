@@ -2,8 +2,14 @@
 
 
  quarto add r-wasm/quarto-live --no-prompt  
+quarto add quarto-ext/shinylive
 
 
+For shinylive:
+filters:
+  - shinylive
+
+  
 mkdir -p quarto_docs
 
 for file in *.ipynb; do
@@ -31,6 +37,7 @@ done
 ## Quarto
 
 quarto add --no-prompt r-wasm/quarto-live
+quarto add quarto-ext/shinylive
 
 quarto render src/FILE.Rmd --output-dir ../quarto_dist
 quarto render quarto_docs/ --no-execute --output-dir ../quarto_dist
