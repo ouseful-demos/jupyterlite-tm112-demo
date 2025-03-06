@@ -3,7 +3,6 @@ title: Sonification Demo
 format: live-html
 ---
 
-
 This notebook demonstrates how to "sonify" a simple data set, converting the data to an audio form to help us try to perceive patterns within that data.
 
 

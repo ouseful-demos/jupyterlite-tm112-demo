@@ -3,7 +3,6 @@ title: Using Jupyter Notebooks
 format: live-html
 ---
 
-
 Welcome to the world of Jupyter notebooks.
 
 Jupyter notebooks provide a literate programming, browser based interface and interactive development environment for a wide range of computer languages.

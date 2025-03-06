@@ -2,6 +2,7 @@
 title: Using folium magic Python API
 format: live-html
 ---
+
 # Using folium magic Python API
 
 Originally created as an IPython magic command to simplify the creation of `folium` maps in IPython/Jupyter notebook environments, the `folium_map()` utility function simplifies the process of creating maps using a standard Python function in environments that support rich `__repr__` display outputs.

@@ -2,6 +2,7 @@
 title: Activity 6.16 - Cell Tower Lookup
 format: live-html
 ---
+
 ```{pyodide}
 #| autorun: true
 #| echo: false

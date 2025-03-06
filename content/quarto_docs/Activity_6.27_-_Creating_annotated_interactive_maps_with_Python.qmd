@@ -2,6 +2,7 @@
 title: Activity 6.27 - Creating annotated interactive maps with Python
 format: live-html
 ---
+
 ```{pyodide}
 #| autorun: true
 #| echo: false

@@ -2,6 +2,7 @@
 title: Playing With `dict`s - Geolocation API Data
 format: live-html
 ---
+
 ```{pyodide}
 #| autorun: true
 #| echo: false
