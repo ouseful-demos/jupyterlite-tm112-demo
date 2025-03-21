@@ -24,6 +24,7 @@ Alternatively, you can run live interactive notebook activities inside your brow
 
 - [document centric "Jupyter notebook" style UI](https://ouseful-demos.github.io/jupyterlite-tm112-demo/tree)
 - [IDE style JupyterLab environment](https://ouseful-demos.github.io/jupyterlite-tm112-demo/lab)
+- [interactive HTML book with in-browser executable code (`quarto`/`quarto-live`](https://ouseful-demos.github.io/jupyterlite-tm112-demo/quarto_output/)
 
 __When running the notebooks in JupyterLite, use the `Python 3.11 XPython` kernel for all module notebooks *except* the *Activity 6.29 - Modelling uncertainty* notebook which MUST use the *Pyodide* kernel.__
 
