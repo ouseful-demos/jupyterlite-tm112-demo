@@ -4,9 +4,8 @@ Location data plays an important role in many practical computing applications.
 
 Use this guide to explore how we can use off-the-shelf Python packages to work with loacation data, including:
 
-- how to call remote thrid party APIs (application programming interfaces) to retrieve locatin data from addresses or postcodes;
+- how to call remote third party APIs (application programming interfaces) to retrieve location data from addresses or postcodes;
 - use interactive maps to display location data such as markers or boundary lines.
-
 
 The materials are currently presented in three main ways:
 

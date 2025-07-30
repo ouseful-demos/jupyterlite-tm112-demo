@@ -1,0 +1,23 @@
+# See docs at: https://mystmd.org/guide/frontmatter
+version: 1
+project:
+  id: 86d5223a-b171-45c1-b8a2-1d040e9d1291
+  title: TM112 geolocation demo
+  description: Demo of MyST built interactive book for TM112 geolocation materials
+  keywords: []
+  authors: []
+  github: https://github.com/ouseful-demos/jupyterlite-tm112-demo
+  # bibliography: []
+  jupyter:
+    lite: false
+    kernelName: XPython
+site:
+  template: book-theme
+  # title:
+  # options:
+  #   logo: site_logo.png
+  nav: []
+  #actions:
+  #  - title: Learn More
+  #    url: https://mystmd.org/guide
+  domains: []
